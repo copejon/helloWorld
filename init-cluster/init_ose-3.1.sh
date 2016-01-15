@@ -3,12 +3,12 @@
 echo "[Shell: Setting up Subscription]"
 set -e
 
-#echo -n "Subscription-Manager User Name: "
-#read userName
-#echo -n "Password: "
-#read passwd
+echo -n "Subscription-Manager User Name: "
+read userName
+echo -n "Password: "
+read passwd
 
-#subscription-manager register --username="$userName" --password="$passwd"
+subscription-manager register --username="$userName" --password="$passwd"
 
 subscription-manager list --available | \
    sed -n '/OpenShift Employee Subscription/,/Pool ID/p' | \

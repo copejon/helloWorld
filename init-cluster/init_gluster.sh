@@ -9,12 +9,12 @@ sudo yum-config-manager --add-repo http://download.gluster.org/pub/gluster/glust
 sudo yum-config-manager --enable glusterfs-epel
 sudo yum install -y glusterfs glusterfs-server glusterfs-client
 
-systemctl stop iptables
-systemctl stop firewalld
-systemctl enable glusterd
-systemctl start glusterd
-systemctl enable glusterfsd
-systemctl start glusterfsd
+systemctl stop iptables || true
+systemctl stop firewalld || true
+systemctl enable glusterd || true
+systemctl start glusterd || true
+systemctl enable glusterfsd || true
+systemctl start glusterfsd || true
 mkdir -p /mnt/brick
 mkdir /mnt/gluster
 echo "[Shell: glusterfs ready]"

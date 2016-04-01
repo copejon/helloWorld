@@ -18,5 +18,12 @@ subscription-manager repos \
 sudo yum install wget net-tools bind-utils iptables-services bridge-utils \
                  bash-completion git tmux vim gcc python-virtualenv ntp \
                  docker atomic-openshift-utils -y
-#sudo sed -i "s#OPTIONS='--selinux-enabled'#OPTIONS='--selinux-disabled'#" /etc/sysconfig/docker
+subscription-manager unsubscribe --all
+
+
+subscription-manager list --available | \
+   sed -n '/Employee SKU/,/Pool ID/p' | \
+   sed -n '/Pool ID/ s/.*\://p' | sed -e 's/^[ \t]*//' | \
+   xargs -i{} subscription-manager attach --pool={}
+
 echo "[Shell: Subscription Setup Complete]"

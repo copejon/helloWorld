@@ -4,6 +4,16 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDrXuQi+FY2/vwu1+9T+SsMVu4uaVOt0RULx5SF0U26
 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6VfBKd6hqd5h7k5f+AtjJSV1hdW5u9/3uAolK3SD2/5GD9+rn+FMSdbtkeaKuuVJPi2HjnsVMO+r8WcuyN5ZSYHywiSoh4S7PamAxra1CLISsFHPYFlGrtdHC70wnoT7+/wAJk2D3CYkCNMWIxs5eR0cefDOytipBfDplhkJByyrcnXuhI8St3XJzpjlXu454diJOxfsk6axanWLOr/WZFmUi1U6V4gRE7XtKG9WFUm1bmNgkgd7lehKzi+isTjnI+b4tnD0yIzKFcsgIvLdGJTI6Lluj33CeBHIocwu0LbvowTyYSqhP6DzGhGuKfK9rMnJh/ll0Bnu1xf/ok0NSQ== Jpeerindex@doolittle-5.local
 EOF
 
+
+subscription-manager register
+subscription-manager list --available | \
+   sed -n '/Employee SKU/,/Pool ID/p' | \
+   sed -n '/Pool ID/ s/.*\://p' | sed -e 's/^[ \t]*//' | \
+   xargs -i{} subscription-manager attach --pool={}
+subscription-manager repos --enable=rhel-7-server-optional-rpms
+subscription-manager repos --enable=rhel-7-server-extras-rpms
+
+
 yum update -y;
 yum install -y wget git htop tmux gcc;
 cat << EOF > /root/.bash_profile 
@@ -39,4 +49,7 @@ mkdir $KPATH
 wget -P /tmp/ https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz
 tar -xzf /tmp/go* -C /usr/local 
 go version
+go get -u github.com/tools/godep
+go get -u github.com/onsi/ginkgo/ginkgo
+go get -u github.com/onsi/gomega
 git clone https://github.com/copejon/kubernetes.git $KPATH

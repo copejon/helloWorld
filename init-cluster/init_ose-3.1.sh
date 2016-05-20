@@ -3,7 +3,6 @@
 echo "[Shell: Setting up Subscription]"
 set -e
 
-echo -n "Subscription-Manager User Name: "
 subscription-manager register
 
 subscription-manager list --available | \

@@ -3,7 +3,8 @@
 GCE_NODES=""
 function shutdown {
 	if [[ $KUBE_GCE_INSTANCE_PREFIX  ]]; then
-                GCE_NODES=`gcloud compute instances list | grep $KUBE_GCE_INSTANCE_PREFIX`
+		echo "Discovering Nodes prefixed $KUBE_GCE_INSTANCE_PREFIX"
+		GCE_NODES=`gcloud compute instances list | grep $KUBE_GCE_INSTANCE_PREFIX`
 		printf "%s Matching Nodes %s\n" '-----' '-----'
 		IFS=$'\n'
 		for i in $GCE_NODES; do
@@ -12,7 +13,7 @@ function shutdown {
 		IFS=$' '
 		printf "%s\n" '---------------------------'
 		
-		read -p "Shutdown these nodes? [Y/n]: " -i y input
+		read -e -p "Shutdown these nodes? [Y/n]: " -i y input
 
 		case "$input" in
 			[yY]) 

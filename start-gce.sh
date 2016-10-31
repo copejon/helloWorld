@@ -3,8 +3,9 @@
 GCE_NODES=""
 function startup {
 	if [[ $KUBE_GCE_INSTANCE_PREFIX  ]]; then
-                GCE_NODES=`gcloud compute instances list | grep $KUBE_GCE_INSTANCE_PREFIX`
-		printf "%s Matching Nodes %s\n" '-----' '-----'
+                echo "Discovering nodes prefixed $KUBE_GCE_INSTANCE_PREFIX"
+		GCE_NODES=`gcloud compute instances list | grep $KUBE_GCE_INSTANCE_PREFIX`
+		printf "%s Nodes %s\n" '-----' '-----'
 		IFS=$'\n'
 		for i in $GCE_NODES; do
 			echo $i
@@ -12,11 +13,10 @@ function startup {
 		IFS=$' '
 		printf "%s\n" '---------------------------'
 		
-		read -p "Start these nodes? [Y/n]: " -i y input
+		read -e -p "Start these nodes? [Y/n]: " -i "y" input
 
 		case "$input" in
 			[yY])	
-				echo "doStartup"
 				doStartUp
 				return 0 
 				;;

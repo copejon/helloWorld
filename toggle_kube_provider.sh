@@ -8,9 +8,7 @@ KUBE_CONFIG_GCE="$KUBE_CONFIG.gce"
 KUBE_CONFIG_LOC="$KUBE_CONFIG.local"
 HEADER="[Kube-Provider-Toggle]"
 
-echo "$HEADER"
 if [ -r $KUBE_CONFIG ]; then
-	echo "$KUBE_CONFIG exists"
 	if egrep -q '(current-context:) [a-z]+\-gce' $KUBE_CONFIG; then
 		# .kube/config is GCE
 		echo "$HEADER Detected config: GCE"

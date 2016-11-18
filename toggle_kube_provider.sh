@@ -3,41 +3,65 @@
 # Kubernetes config toggler.  A lazy little script to make it easy to
 # jump between kubernetes providers.  Useful for swapping between kube
 # clusters hosted in GCE and local.
-KUBE_CONFIG="/root/.kube/config"
-KUBE_CONFIG_GCE="$KUBE_CONFIG.gce"
-KUBE_CONFIG_LOC="$KUBE_CONFIG.local"
+KCFG="/root/.kube/config"
+KCFG_GCE="$KCFG.gce"
+KCFG_LOC="$KCFG.local"
 HEADER="[Kube-Provider-Toggle]"
 
-if [ -r $KUBE_CONFIG ]; then
-	if egrep -q '(current-context:) [a-z]+\-gce' $KUBE_CONFIG; then
+if [ -r $KCFG ]; then
+	if egrep -q '(current-context:) [a-z]+\-gce' $KCFG; then
 		# .kube/config is GCE
-		echo "$HEADER Detected config: GCE"
-		
+		echo "$HEADER Toggle GCE OFF"
+		mv -f $KCFG $KCFG_GCE
+
 		# Toggled local config
-		if [ -r $KUBE_CONFIG_LOC ]; then
-			mv -f $KUBE_CONFIG $KUBE_CONFIG_GCE
-			mv $KUBE_CONFIG_LOC $KUBE_CONFIG
+		if [ -r $KCFG_LOC ]; then
+			echo "Toggle LOCAL ON"
+			mv $KCFG_LOC $KCFG
 			export KUBERNETES_PROVIDER="local"
-			echo "$HEADER New config: Local"
 		else
-			echo "$HEADER No Local config, don't toggle."
+			echo "$HEADER $KCFG_LOC not found"
 		fi
-	elif  egrep -q '(current-context:) local' $KUBE_CONFIG; then
+	elif  egrep -q '(current-context:) local' $KCFG; then
 		# .kube/config is local
-		echo "$HEADER Detected config: Local"
+		echo "$HEADER Toggle LOCAL OFF"
+		mv -f $KCFG $KCFG_LOC
 		
 		# Toggle GCE config
-		if [ -r $KUBE_CONFIG_GCE ]; then
-			mv -f $KUBE_CONFIG $KUBE_CONFIG_LOC
-			mv -f $KUBE_CONFIG_GCE $KUBE_CONFIG
+		if [ -r $KCFG_GCE ]; then
+			echo "Toggle GCE ON"
+			mv -f $KCFG_GCE $KCFG
 			export KUBERNETES_PROVIDER="gce"
-			echo "$HEADER New config: GCE"
 		else
-			echo "$HEADER No GCE config, don't toggle"
+			echo "$HEADER $KCFG_GCE not found"
 		fi
 	else
-		echo "$HEADER cannot determine provider from $KUBE_CONFIG"		
+		echo "$HEADER cannot determine provider from $KCFG"		
 	fi
 else
-	echo "$HEADER $KUBE_CONFIG not found"
-fi
+	if [[ -r $KCFG_GCE && ! -r $KCFG_LOC ]]; then
+		echo "Toggle GCE ON"
+		mv $KCFG_GCE $KCFG
+	elif [[ -r $KCFG_LOC && ! -r $KCFG_GCE ]]; then
+		echo "Toggle LOCAL ON"
+		mv $KCFG_LOC $KCFG
+	elif [[ -r $KCFG_LOC && -r $KCFG_GCE  ]]; then
+		echo "Choose Config: "
+		echo "1. $KCFG_GCE"
+	       	echo "2. $KCFG_LOC"
+		read -p "Choice: " -n 1 cfg
+		case $cfg in
+			"1")
+				echo "Toggle GCE ON"
+				mv $KCFG_GCE $KCFG
+				;;
+			"2")
+				echo "Toggle LOCAL ON "
+				mv $KCFG_LOC $KCFG
+				;;
+			*)
+				echo "Invalid choice"
+				;;
+		esac
+	fi
+fi	

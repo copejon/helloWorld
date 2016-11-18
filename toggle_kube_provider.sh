@@ -6,45 +6,59 @@
 KCFG="/root/.kube/config"
 KCFG_GCE="$KCFG.gce"
 KCFG_LOC="$KCFG.local"
-HEADER="[Kube-Provider-Toggle]"
+HEADER="[KubeToggle]"
 
-if [ -r $KCFG ]; then
-	if egrep -q '(current-context:) [a-z]+\-gce' $KCFG; then
-		# .kube/config is GCE
-		echo "$HEADER Toggle GCE OFF"
-		mv -f $KCFG $KCFG_GCE
+function pout {
+	echo $HEADER $@
+}
 
-		# Toggled local config
-		if [ -r $KCFG_LOC ]; then
-			echo "Toggle LOCAL ON"
-			mv $KCFG_LOC $KCFG
-			export KUBERNETES_PROVIDER="local"
-		else
-			echo "$HEADER No config is set."
-		fi
-	elif  egrep -q '(current-context:) local' $KCFG; then
-		# .kube/config is local
-		echo "$HEADER Toggle LOCAL OFF"
-		mv -f $KCFG $KCFG_LOC
-		
-		# Toggle GCE config
-		if [ -r $KCFG_GCE ]; then
-			echo "Toggle GCE ON"
-			mv -f $KCFG_GCE $KCFG
-			export KUBERNETES_PROVIDER="gce"
-		else
-			echo "$HEADER No Config is set"
-		fi
-	else
-		echo "$HEADER cannot determine provider from $KCFG"		
-	fi
-else
-	if [[ -r $KCFG_GCE && ! -r $KCFG_LOC ]]; then
-		echo "Toggle GCE ON"
+function toggle_gce_on {
+	if [[ -r $KCFG_GCE  ]]; then
+		pout "Activating GCE config"
 		mv $KCFG_GCE $KCFG
-	elif [[ -r $KCFG_LOC && ! -r $KCFG_GCE ]]; then
-		echo "Toggle LOCAL ON"
+		export KUBERNETES_PROVIDER="gce"
+	else
+		pout "GCE config not found"
+	fi
+}
+
+function toggle_local_on {
+	if [[ -r $KCFG_LOC  ]]; then
+		pout "Activating LOCAL config"
 		mv $KCFG_LOC $KCFG
+		export KUBERNETES_PROVIDER="local"
+	else
+		pout "LOCAL config not found"
+	fi
+}
+
+function toggle_gce_off {
+	pout "Deactivatinig GCE config"
+	mv $KCFG $KCFG_GCE
+	unset KUBERNETES_PROVIDER
+}
+
+function toggle_local_off {
+	pout "Deactivating LOCAL config"
+	mv $KCFG $KCFG_LOC
+	unset KUBERNETES_PROVIDER
+}
+
+function toggle_active_config {
+	if egrep -q '(current-context:) [a-z]+\-gce' $KCFG; then
+		toggle_gce_off
+		toggle_local_on
+	elif  egrep -q '(current-context:) local' $KCFG; then
+		toggle_local_off
+		toggle_gce_on
+	fi
+}
+
+function toggle_inactive_config {
+	if [[ -r $KCFG_GCE && ! -r $KCFG_LOC ]]; then
+		toggle_gce_on
+	elif [[ -r $KCFG_LOC && ! -r $KCFG_GCE ]]; then
+		toggle_local_on
 	elif [[ -r $KCFG_LOC && -r $KCFG_GCE  ]]; then
 		echo "Choose Config: "
 		echo "1. $KCFG_GCE"
@@ -52,16 +66,27 @@ else
 		read -p "Choice: " -n 1 cfg
 		case $cfg in
 			"1")
-				echo "Toggle GCE ON"
-				mv $KCFG_GCE $KCFG
+				toggle_gce_on
 				;;
 			"2")
-				echo "Toggle LOCAL ON "
-				mv $KCFG_LOC $KCFG
+				toggle_local_on
 				;;
 			*)
 				echo "Invalid choice"
 				;;
 		esac
 	fi
-fi	
+}
+
+function show_provider {
+	pout "KUBERNETES_PROVIDER=$KUBERNETES_PROVIDER"
+}
+
+if [[ -r $KCFG ]]; then
+	toggle_active_config
+	show_provider
+else
+	toggle_inactive_config
+	show_provider
+fi
+

@@ -20,7 +20,7 @@ if [ -r $KCFG ]; then
 			mv $KCFG_LOC $KCFG
 			export KUBERNETES_PROVIDER="local"
 		else
-			echo "$HEADER $KCFG_LOC not found"
+			echo "$HEADER No config is set."
 		fi
 	elif  egrep -q '(current-context:) local' $KCFG; then
 		# .kube/config is local
@@ -33,7 +33,7 @@ if [ -r $KCFG ]; then
 			mv -f $KCFG_GCE $KCFG
 			export KUBERNETES_PROVIDER="gce"
 		else
-			echo "$HEADER $KCFG_GCE not found"
+			echo "$HEADER No Config is set"
 		fi
 	else
 		echo "$HEADER cannot determine provider from $KCFG"		

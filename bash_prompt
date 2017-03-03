@@ -56,7 +56,7 @@ else
 fi
 
 parse_git_dirty () {
-	if ! $(git status 2> /dev/null | grep "working directory clean" > /dev/null 2>&1); then
+	if ! $(git status 2> /dev/null | egrep "working\s(directory|tree)\sclean" > /dev/null 2>&1); then
 		echo ${BOLD}" *"
 	fi
 }

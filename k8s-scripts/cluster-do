@@ -1,0 +1,49 @@
+#! /bin/bash
+
+function gce-set {
+	set -a	
+	KUBECONFIG=/Users/jcope/.kube/config
+	KUBERNETES_PROVIDER='gce'
+	NUM_NODES='2'
+	KUBE_GCE_INSTANCE_PREFIX='jcope-e2e'
+	KUBE_GCE_NETWORK='jcope-e2e'
+	set +a
+	echo "GCE env set"
+}
+
+function gke-set {
+	set -a
+	NUM_NODES=2
+	KUBERNETES_PROVIDER='gke'
+	CLUSTER_NAME='jcope-e2e'
+	NETWORK='jcope-e2e-network'
+	ZONE='us-central1-b'
+	set +a
+	echo "GKE env set"
+}
+
+function gce-do {
+	local arg=$1
+	gce-set
+	case "$arg" in
+		"up")   $KPATH/cluster/kube-up.sh
+			;;
+		"down") $KPATH/cluster/kube-down.sh
+			;;
+		*) echo "'$arg' is not valid"
+			;;
+	esac
+}
+
+function gke-do {
+	local arg=$1
+	gke-set
+	case "$arg" in
+		"up")   $KPATH/cluster/kube-up.sh
+			;;
+		"down") $KPATH/cluster/kube-down.sh
+			;;
+		*) echo "'$arg' is not valid"
+			;;
+	esac
+}

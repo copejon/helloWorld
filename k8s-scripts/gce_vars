@@ -1,39 +1,9 @@
 #! /bin/bash
 
-function gce-do {
-	local arg=$1
-	
-	local KUBECONFIG=/Users/jcope/.kube/config
-	local KUBERNETES_PROVIDER='gce'
-	local NUM_NODES='2'
-	local KUBE_GCE_INSTANCE_PREFIX='jcope-e2e'
-	local KUBE_GCE_NETWORK='jcope-e2e'
-	
-	case "$arg" in
-		"up")   $KPATH/cluster/kube-up.sh
-			;;
-		"down") $KPATH/cluster/kube-down.sh
-			;;
-		*) echo "'$arg' is not valid"
-			;;
-	esac
-}
-
-function gke-do {
-	local arg=$1
-	
-	local NUM_NODES=2
-	local KUBERNETES_PROVIDER='gke'
-	local CLUSTER_NAME='jcope-e2e'
-	local NETWORK='jcope-e2e-network'
-	local ZONE='us-central1-b'
-
-	case "$arg" in
-		"up")   $KPATH/cluster/kube-up.sh
-			;;
-		"down") $KPATH/cluster/kube-down.sh
-			;;
-		*) echo "'$arg' is not valid"
-			;;
-	esac
+function _gce-set {
+	export KUBECONFIG=/Users/jcope/.kube/config \ 
+		KUBERNETES_PROVIDER='gce' \ 
+		NUM_NODES='3' \ 
+		KUBE_GCE_INSTANCE_PREFIX='jcope-e2e' \ 
+		KUBE_GCE_NETWORK='jcope-e2e' 
 }

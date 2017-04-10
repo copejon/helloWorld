@@ -1,49 +1,95 @@
 #! /bin/bash
 
-function gce-set {
-	set -a	
-	KUBECONFIG=$HOME/.kube/config
-	KUBERNETES_PROVIDER='gce'
-	NUM_NODES='2'
-	KUBE_GCE_INSTANCE_PREFIX='jcope-e2e'
-	KUBE_GCE_NETWORK='jcope-e2e'
+CLUSTER_ID='jcope-e2e'
+KUBECONFIG="$HOME/.kube/config"
+NUM_NODES=3
+GCE_PROJECT="$(gcloud config get-value project 2>/dev/null)"
+GCE_ZONE="$(gcloud config get-value zone 2>/dev/null)"
+
+function _gce-set {
+	local DISTRO=$1
+
+	set -a
+	KUBECONFIG=$KUBECONFIG		 	 
+	KUBE_NODE_OS_DISTRIBUTION="${DISTRO}"	 
+	KUBERNETES_PROVIDER='gce'		 
+	NUM_NODES=$NUM_NODES
+	KUBE_GCE_INSTANCE_PREFIX="$CLUSTER_ID-$DISTRO"
+	KUBE_GCE_NETWORK=$CLUSTER_ID
 	set +a
-	echo "GCE env set"
+	echo "================= GCE Env Vars" 
+	echo "Distro		= $DISTRO"
+	echo "KubeConfig	= $KUBECONFIG"
+	echo "Provier		= $KUBERNETES_PROVIDER"
+	echo "Number of Nodes	= $NUM_NODES"
+	echo "Instance Prefix	= $KUBE_GCE_INSTANCE_PREFIX"
+	echo "GCE Network	= $KUBE_GCE_NETWORK"
 }
 
-function gke-set {
+function _gke-set {
+	echo "Setting GKE"
 	set -a
-	NUM_NODES=2
-	KUBERNETES_PROVIDER='gke'
-	CLUSTER_NAME='jcope-e2e'
-	NETWORK='jcope-e2e-network'
-	ZONE='us-central1-b'
+ 	KUBERNETES_PROVIDER='gci'
+	CLUSTER_NAME=$CLUSTER_ID	 
+	KUBE_GKE_NETWORK=$CLUSTER_ID	 
+	KUBECONFIG=$KUBECONFIG		 
+	NUM_NODES=$NUM_NODES
 	set +a
-	echo "GKE env set"
+	echo "================= GKE Env Vars"
+	echo "Provider 		= $KUBERNETES_PROVIDER"
+	echo "Cluster Name	= $CLUSTER_NAME"
+	echo "GKE Network	= $KUBE_GKE_NETWORK"
+	echo "Number of Nodes	= $NUM_NODES"
 }
 
 function gce-do {
-	local arg=$1
-	gce-set
-	case "$arg" in
-		"up")   $KPATH/cluster/kube-up.sh
+
+	DISTRO="debian"
+	local OPTIND=1
+	while getopts ":i" opt; do
+		case $opt in
+			i)
+				DISTRO="gci"
+				;;
+			\?)
+				;;
+		esac
+	done
+	shift $(($OPTIND-1))
+	
+	_gce-set $DISTRO
+
+	KUBE_DO="$1"
+	#echo "KUBE_DO=${KUBE_DO}"
+	case "$KUBE_DO" in
+		"up")   
+			#echo "DEBUG - do kube-up.sh"
+			$KPATH/cluster/kube-up.sh
 			;;
-		"down") $KPATH/cluster/kube-down.sh
+		"down") 
+			#echo "DEBUG - do kube-down.sh"
+			$KPATH/cluster/kube-down.sh
 			;;
-		*) echo "'$arg' is not valid"
+		*) echo "'$KUBE_DO' is not valid"
 			;;
 	esac
 }
 
 function gke-do {
-	local arg=$1
-	gke-set
-	case "$arg" in
-		"up")   $KPATH/cluster/kube-up.sh
+	_gke-set
+
+	local cmd=$1
+
+	case "$cmd" in
+		"up")
+			$KPATH/cluster/kube-up.sh
 			;;
-		"down") $KPATH/cluster/kube-down.sh
+		"down")
+			$KPATH/cluster/kube-down.sh
 			;;
-		*) echo "'$arg' is not valid"
+		*)
+			echo "Invalid operation"
 			;;
 	esac
 }
+

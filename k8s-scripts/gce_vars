@@ -1,9 +1,0 @@
-#! /bin/bash
-
-function _gce-set {
-	export KUBECONFIG=/Users/jcope/.kube/config \ 
-		KUBERNETES_PROVIDER='gce' \ 
-		NUM_NODES='3' \ 
-		KUBE_GCE_INSTANCE_PREFIX='jcope-e2e' \ 
-		KUBE_GCE_NETWORK='jcope-e2e' 
-}

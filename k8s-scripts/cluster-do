@@ -1,23 +1,30 @@
 #! /bin/bash
 
+# Common, required env vars
+set -a
 CLUSTER_ID='jcope-e2e'
 KUBECONFIG="$HOME/.kube/config"
 NUM_NODES=3
 GCE_PROJECT="$(gcloud config get-value project 2>/dev/null)"
 GCE_ZONE="$(gcloud config get-value zone 2>/dev/null)"
-
-# Required for all clusters
-export ALLOW_PRIVILEGED=true
-export ALLOW_SECURITY_CONTEXT=false
+ALLOW_PRIVILEGED=true
+ALLOW_SECURITY_CONTEXT=false
+set +a
 
 function _gce-set {
 	local DISTRO=$1
 
+	case $DISTRO in 
+		"debian"|"gci")
+			;;
+		*)
+			echo "Unrecognized OS: $DISTRO"
+			return 1
+	esac
+
 	set -a
-	KUBECONFIG=$KUBECONFIG		 	 
 	KUBE_NODE_OS_DISTRIBUTION="$DISTRO"	 
 	KUBERNETES_PROVIDER="gce"		 
-	NUM_NODES=$NUM_NODES
 	KUBE_GCE_INSTANCE_PREFIX="$CLUSTER_ID-$DISTRO"
 	KUBE_GCE_NETWORK="$CLUSTER_ID-$DISTRO"
 	set +a
@@ -36,8 +43,6 @@ function _gke-set {
  	KUBERNETES_PROVIDER="gke"
 	CLUSTER_NAME=$CLUSTER_ID	 
 	KUBE_GKE_NETWORK=$CLUSTER_ID	 
-	KUBECONFIG=$KUBECONFIG		 
-	NUM_NODES=$NUM_NODES
 	set +a
 	echo "================= GKE Env Vars"
 	echo "Provider 		= $KUBERNETES_PROVIDER"
@@ -46,15 +51,11 @@ function _gke-set {
 	echo "Number of Nodes	= $NUM_NODES"
 }
 
+# Default OS=debian
 function gce-do {
 
 	NODE_DISTRO="debian"
 	KUBE_DO=""
-
-	if [ -z $1 ]; then
-		echo "Please select a cluster action [up|down]"
-		return
-	fi
 
 	while :; do
 		case $1 in
@@ -64,20 +65,24 @@ function gce-do {
 			"up"|"down")
 				KUBE_DO=$1
 				;;
-			?*)
+			?*) #Invalid opt
 				echo "Unrecognized option: $1"
 				return
 				;;
-			*)
+			*) #End of opts
 				break
 				;;
 		esac
 		shift
 	done
 	
-	_gce-set $NODE_DISTRO
+	# This really shouldn't ever detect a return of 1
+	if ! _gce-set $NODE_DISTRO; then
+		echo "Aborting cluster $KUBE_DO."
+		return 1
+	fi
 
-	echo "KUBE_DO=${KUBE_DO}"
+	echo "Bringing cluster [$KUBE_DO]"
 	case "$KUBE_DO" in
 		"up")   
 			#echo "DEBUG - do kube-up.sh"
@@ -87,6 +92,9 @@ function gce-do {
 			#echo "DEBUG - do kube-down.sh"
 			$KPATH/cluster/kube-down.sh
 			;;
+		*)
+			echo "Please select a cluster action [up|down]"
+			return 1
 	esac
 }
 

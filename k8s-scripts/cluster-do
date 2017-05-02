@@ -6,7 +6,8 @@ CLUSTER_ID='jcope-e2e'
 KUBECONFIG="$HOME/.kube/config"
 NUM_NODES=3
 GCE_PROJECT="$(gcloud config get-value project 2>/dev/null)"
-GCE_ZONE="$(gcloud config get-value zone 2>/dev/null)"
+KUBE_GCE_ZONE="$(gcloud config get-value zone 2>/dev/null)"
+ZONE=$KUBE_GCE_ZONE
 ALLOW_PRIVILEGED=true
 ALLOW_SECURITY_CONTEXT=false
 set +a

@@ -18,8 +18,8 @@ fi
 
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# lazy functions to start/down gce||gke clusters
+# lazy functions to spin up/down gce||gke clusters
 source $DIR/k8s-scripts/cluster-do
 
-# custom bash prompt includeing PS1
+# custom bash prompt including PS1
 source $DIR/bash_prompt

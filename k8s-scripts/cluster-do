@@ -1,18 +1,21 @@
 #! /bin/bash
 
 # Common, required env vars
-set -a
-CLUSTER_ID='jcope-e2e'
-KUBECONFIG="$HOME/.kube/config"
-NUM_NODES=3
-GCE_PROJECT="$(gcloud config get-value project 2>/dev/null)"
-KUBE_GCE_ZONE="$(gcloud config get-value zone 2>/dev/null)"
-ZONE=$KUBE_GCE_ZONE
-ALLOW_PRIVILEGED=true
-ALLOW_SECURITY_CONTEXT=false
-set +a
-
+function _init-common-gcp {
+	set -a
+	CLUSTER_ID='jcope-e2e'
+	KUBECONFIG="$HOME/.kube/config"
+	NUM_NODES=3
+	GCE_PROJECT="$(gcloud config get-value project 2>/dev/null)"
+	KUBE_GCE_ZONE="$(gcloud config get-value compute/zone 2>/dev/null)"
+	ZONE=$KUBE_GCE_ZONE
+	ALLOW_PRIVILEGED=true
+	ALLOW_SECURITY_CONTEXT=false
+	KUBE_SSH_USER=$(gcloud config get-value account  2>/dev/null  | sed "s/@.*//")
+	set +a
+}
 function _gce-set {
+	_init-common-gcp
 	local DISTRO=$1
 
 	case $DISTRO in 
@@ -36,25 +39,27 @@ function _gce-set {
 	echo "Number of Nodes	= $NUM_NODES"
 	echo "Instance Prefix	= $KUBE_GCE_INSTANCE_PREFIX"
 	echo "GCE Network	= $KUBE_GCE_NETWORK"
+	echo "KUBE_GCE_ZONE 	= $KUBE_GCE_ZONE"
 }
 
 function _gke-set {
+	_init-common-gcp
 	echo "Setting GKE"
 	set -a
  	KUBERNETES_PROVIDER="gke"
-	CLUSTER_NAME=$CLUSTER_ID	 
+	CLUSTER_NAME="$CLUSTER_ID-$KUBERNETES_PROVIDER"
 	KUBE_GKE_NETWORK=$CLUSTER_ID	 
 	set +a
 	echo "================= GKE Env Vars"
-	echo "Provider 		= $KUBERNETES_PROVIDER"
+	echo "Provider   	= $KUBERNETES_PROVIDER"
 	echo "Cluster Name	= $CLUSTER_NAME"
 	echo "GKE Network	= $KUBE_GKE_NETWORK"
 	echo "Number of Nodes	= $NUM_NODES"
+	echo "ZONE 	        = $ZONE"
 }
 
 # Default OS=debian
 function gce-do {
-
 	NODE_DISTRO="debian"
 	KUBE_DO=""
 

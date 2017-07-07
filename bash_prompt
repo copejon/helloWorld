@@ -64,5 +64,5 @@ parse_git_branch () {
   git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
 }
 
-PS1="\[${BLUE}\]\u\[$BASE0\]@\[$CYAN\]\h \[$BASE0\]| \[$CYAN\]\w\[$BASE0\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" BR: \")\[$YELLOW\]\$(parse_git_branch)\[$BASE0\]\n\\$ \[$RESET\]"
+PS1="\[${BLUE}\]\u\[$BASE0\]@\[$CYAN\]\h \[$BASE0\]| \[$CYAN\]\w\[$BASE0\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" \")\[$YELLOW\]\$(parse_git_branch)\[$YELLOW\]\n\\$ \[$RESET\]"
 #PS1="\[${BLUE}\]\u\[$BASE0\]@\[$CYAN\]\h \[$BASE0\]>\[$BASE1\]>\[$BASE2\]> \[$CYAN\]\w\[$BASE0\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" BR: \")\[$YELLOW\]\$(parse_git_branch)\[$BASE0\]\n\\$ \[$RESET\]"

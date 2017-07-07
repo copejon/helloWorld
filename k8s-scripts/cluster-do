@@ -11,7 +11,6 @@ function _init-common-gcp {
 	ZONE=$KUBE_GCE_ZONE
 	ALLOW_PRIVILEGED=true
 	ALLOW_SECURITY_CONTEXT=false
-	KUBE_SSH_USER=$(gcloud config get-value account  2>/dev/null  | sed "s/@.*//")
 	set +a
 }
 function _gce-set {
@@ -49,6 +48,7 @@ function _gke-set {
  	KUBERNETES_PROVIDER="gke"
 	CLUSTER_NAME="$CLUSTER_ID-$KUBERNETES_PROVIDER"
 	KUBE_GKE_NETWORK=$CLUSTER_ID	 
+	KUBE_SSH_USER=$(gcloud config get-value account  2>/dev/null  | sed "s/@.*//")
 	set +a
 	echo "================= GKE Env Vars"
 	echo "Provider   	= $KUBERNETES_PROVIDER"

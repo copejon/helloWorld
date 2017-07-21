@@ -1,6 +1,10 @@
 # Source this file into ~/.bash_profile
 # Anything I want to remain consistent between machines goes here.
 
+# I want to use i-search, which is bound to ctrl-s.  Howerver, XOFF, which pauses data transmission,
+# is also bound to ctl-s, which is stupid.  Since I live my life through SSH, this isn't great.
+stty -ixon  
+
 alias ls='ls -Fh --group-directories-first --color=auto'
 alias ll='ls -l'
 alias k='kubectl'

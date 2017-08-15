@@ -75,9 +75,9 @@ if [[ $(hostname -s) = *"master"* ]]; then
 	curl -sSL https://github.com/gluster/gluster-kubernetes/archive/master.tar.gz | tar -xz
 
 	# Kubeadm
-	kubeadm init --pod-network-cidr=10.244.0.0/16 
+	kubeadm init --pod-network-cidr=10.244.0.0/16 | tee /root/kube-next-steps.txt 
 	mkdir -p /root/.kube
-	sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
+	sudo cp -f /etc/kubernetes/admin.conf /root/.kube/config
 	sudo chown $(id -u):$(id -g) /root/.kube/config
 	kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 	kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel-rbac.yml

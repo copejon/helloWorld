@@ -28,6 +28,10 @@ yum install docker-1.12.6 -y -q -e 0
 systemctl enable docker
 systemctl start docker
 
+# Gluster-Fuse
+yum install gluster-fuse -y -q -e 0
+
+
 # Kubectl
 echo "============= Installing kubectl ============"
 mkdir -p /root

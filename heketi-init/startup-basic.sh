@@ -8,6 +8,7 @@ if [ $(id -u) != 0  ]; then
 	sudo su
 fi
 
+set -x
 set -e
 set -o pipefail
 
@@ -65,10 +66,9 @@ if [[ $(hostname -s) = *"master"* ]]; then
 	echo "============== Installing kubeadm  =========="
 	curl -sSL https://github.com/heketi/heketi/releases/download/v4.0.0/heketi-client-v4.0.0.linux.amd64.tar.gz | tar -xz
 	mv $(find ./ -name heketi-cli) /usr/bin/
-	mv heketi-client /root/
 	
 	# Gluster-Kubernetes
-	curl -sSLO https://github.com/gluster/gluster-kubernetes/archive/master.tar.gz | tar -xz
+	curl -sSL https://github.com/gluster/gluster-kubernetes/archive/master.tar.gz | tar -xz
 
 	# Kubeadm
 	kubeadm init --pod-network-cidr=10.244.0.0/16 

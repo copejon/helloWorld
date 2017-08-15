@@ -29,7 +29,7 @@ systemctl enable docker
 systemctl start docker
 
 # Gluster-Fuse
-yum install gluster-fuse -y -q -e 0
+yum install glusterfs-fuse -y -q -e 0
 
 
 # Kubectl

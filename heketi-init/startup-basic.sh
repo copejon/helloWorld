@@ -3,14 +3,13 @@
 LOG_FILE=/root/start-script.log
 SUCCESS_FILE=/root/__STARTUP_SUCCESS
 
+set -e
+set -o pipefail
+
 if [ $(id -u) != 0  ]; then
 	echo "!!! Must run as sudo  !!!"
 	sudo su
 fi
-
-set -x
-set -e
-set -o pipefail
 
 exec 3>&1 4>&2
 trap $(exec 1>&3 2>&4) 0 1 2 3
@@ -31,11 +30,11 @@ systemctl start docker
 # Gluster-Fuse
 yum install glusterfs-fuse -y -q -e 0
 
+mkdir -p /root
+cd /root/
 
 # Kubectl
 echo "============= Installing kubectl ============"
-mkdir -p /root
-cd /root/
 curl -sSLO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/bin/
@@ -66,15 +65,16 @@ if [[ $(hostname -s) = *"master"* ]]; then
 	kubectl completion bash > /root/.kube/completion
 	echo "source /root/.kube/completion" >> /root/.bashrc
 
-	# Heketi
-	echo "============== Installing kubeadm  =========="
+	# Gluster-Kubernetes
+	curl -sSL https://github.com/gluster/gluster-kubernetes/archive/master.tar.gz | tar -xz
+	curl -sSL https://github.com/jarrpa/gluster-kubernetes/archive/block-and-s3.tar.gz | tar -xz
+
+	# Kubeadm
+	echo "============== Installing Kubeadm  =========="
 	curl -sSL https://github.com/heketi/heketi/releases/download/v4.0.0/heketi-client-v4.0.0.linux.amd64.tar.gz | tar -xz
 	mv $(find ./ -name heketi-cli) /usr/bin/
 	
-	# Gluster-Kubernetes
-	curl -sSL https://github.com/gluster/gluster-kubernetes/archive/master.tar.gz | tar -xz
-
-	# Kubeadm
+	# Kubeadm Init
 	kubeadm init --pod-network-cidr=10.244.0.0/16 | tee /root/kube-next-steps.txt 
 	mkdir -p /root/.kube
 	sudo cp -f /etc/kubernetes/admin.conf /root/.kube/config

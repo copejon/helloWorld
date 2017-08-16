@@ -58,9 +58,10 @@ systemctl start kubelet
 
 
 if [[ $(hostname -s) = *"master"* ]]; then
-	echo "Looks like this is a master node.  Doing kubeadm init"
+	echo "Looks like this is the master node. Initializing kubeadm"
 	# QoL Setup
 	yum install bash-completion tmux -y
+	curl -sSLO https://raw.githubusercontent.com/copejon/sandbox/master/.tmux.conf
 	mkdir -p /root/.kube
 	kubectl completion bash > /root/.kube/completion
 	echo "source /root/.kube/completion" >> /root/.bashrc

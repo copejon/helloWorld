@@ -7,7 +7,7 @@ set -e
 set -o pipefail
 
 if [ $(id -u) != 0  ]; then
-	echo "!!! Must run as sudo  !!!"
+	echo "!!! Switching to root  !!!"
 	sudo su
 fi
 
@@ -20,6 +20,9 @@ echo "               Start-Up Script"
 echo "============================================="
 
 systemctl stop firewalld && systemctl disable firewalld
+
+echo "============= Configuring SSH ============="
+sed -i 's#/PermitRootLogin no#PermitRootLogin yes#' /etc/ssh/sshd_config
 
 # Docker
 echo "============= Installing Docker ============="

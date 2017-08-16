@@ -76,7 +76,7 @@ if [[ $(hostname -s) = *"master"* ]]; then
 	mv $(find ./ -name heketi-cli) /usr/bin/
 	
 	# Kubeadm Init
-	kubeadm init --pod-network-cidr=10.244.0.0/16 | tee /root/kube-next-steps.txt 
+	kubeadm init --pod-network-cidr=10.244.0.0/16 | tee >(sed -n '/kubeadm join --token/p' > init-node-command.txt)
 	mkdir -p /root/.kube
 	sudo cp -f /etc/kubernetes/admin.conf /root/.kube/config
 	sudo chown $(id -u):$(id -g) /root/.kube/config

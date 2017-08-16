@@ -11,6 +11,9 @@ if [ $(id -u) != 0  ]; then
 	sudo su
 fi
 
+echo "cd-ing to root home"
+cd /root/
+
 exec 3>&1 4>&2
 trap $(exec 1>&3 2>&4) 0 1 2 3
 exec 1>${LOG_FILE} 2>&1
@@ -20,9 +23,11 @@ echo "               Start-Up Script"
 echo "============================================="
 
 systemctl stop firewalld && systemctl disable firewalld
+setenforce 0
 
 echo "============= Configuring SSH ============="
-sed -i 's#/PermitRootLogin no#PermitRootLogin yes#' /etc/ssh/sshd_config
+echo "enabling ssh root login"
+sed -i 's#PermitRootLogin no#PermitRootLogin yes#' /etc/ssh/sshd_config
 
 # Docker
 echo "============= Installing Docker ============="
@@ -32,9 +37,6 @@ systemctl start docker
 
 # Gluster-Fuse
 yum install glusterfs-fuse -y -q -e 0
-
-mkdir -p /root
-cd /root/
 
 # Kubectl
 echo "============= Installing kubectl ============"
@@ -54,7 +56,6 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
 https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF"
-setenforce 0
 yum install kubelet kubeadm -y -q -e 0
 systemctl enable kubelet
 systemctl start kubelet

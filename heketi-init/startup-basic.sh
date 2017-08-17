@@ -11,7 +11,7 @@ if [ $(id -u) != 0  ]; then
 	sudo su
 fi
 
-echo "cd-ing to root home"
+echo "--cd-ing to root home"
 cd /root/
 
 exec 3>&1 4>&2
@@ -25,12 +25,12 @@ echo "============================================="
 systemctl stop firewalld && systemctl disable firewalld
 setenforce 0
 
-echo "============= Configuring SSH ============="
+echo "-- Configuring SSH"
 echo "enabling ssh root login"
 sed -i 's#PermitRootLogin no#PermitRootLogin yes#' /etc/ssh/sshd_config
 
 # Docker
-echo "============= Installing Docker ============="
+echo "-- Installing Docker"
 yum install docker-1.12.6 -y -q -e 0
 systemctl enable docker
 systemctl start docker
@@ -39,13 +39,13 @@ systemctl start docker
 yum install glusterfs-fuse -y -q -e 0
 
 # Kubectl
-echo "============= Installing kubectl ============"
+echo "-- Installing kubectl"
 curl -sSLO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/bin/
 
 # Kubeadm
-echo "============== Installing kubeadm  =========="
+echo "-- Installing kubeadm"
 su -c "cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -57,14 +57,19 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
 https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF"
 yum install kubelet kubeadm -y -q -e 0
-systemctl enable kubelet
-systemctl start kubelet
+
+# Start the kubelet on minions only
+if ! [[ $(hostname -s) = *"master"* ]]; then
+	systemctl enable kubelet
+	systemctl start kubelet
+fi
 
 
+# Initialize the master node 
 if [[ $(hostname -s) = *"master"* ]]; then
 	echo "Looks like this is the master node. Initializing kubeadm"
 	# QoL Setup
-	yum install bash-completion tmux -y
+	yum install bash-completion tmux unzip -y
 	curl -sSLO https://raw.githubusercontent.com/copejon/sandbox/master/.tmux.conf
 	mkdir -p /root/.kube
 	kubectl completion bash > /root/.kube/completion
@@ -74,8 +79,15 @@ if [[ $(hostname -s) = *"master"* ]]; then
 	curl -sSL https://github.com/gluster/gluster-kubernetes/archive/master.tar.gz | tar -xz
 	curl -sSL https://github.com/jarrpa/gluster-kubernetes/archive/block-and-s3.tar.gz | tar -xz
 
+	# s3Curl
+	curl -sSLO http://s3.amazonaws.com/doc/s3-example-code/s3-curl.zip
+	unzip s3-curl.zip
+	mv s3-curl.zip /tmp/
+	chmod 770 s3-curl/*.pl
+	yum install perl-Digest-HMAC -y -q -e 0
+
 	# Kubeadm
-	echo "============== Installing Kubeadm  =========="
+	echo "-- Initializing"
 	curl -sSL https://github.com/heketi/heketi/releases/download/v4.0.0/heketi-client-v4.0.0.linux.amd64.tar.gz | tar -xz
 	mv $(find ./ -name heketi-cli) /usr/bin/
 	

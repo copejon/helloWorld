@@ -1,7 +1,13 @@
 #! /bin/bash
 
+
+### TODOs
+# parse gluster-s3-ep socket.
+
+
 LOG_FILE=/root/start-script.log
 SUCCESS_FILE=/root/__STARTUP_SUCCESS
+NEXT_STEPS_FILE=/root/next_steps
 
 set -e
 set -o pipefail
@@ -13,6 +19,8 @@ fi
 
 echo "--cd-ing to root home"
 cd /root/
+
+touch $NEXT_STEPS_FILE
 
 exec 3>&1 4>&2
 trap $(exec 1>&3 2>&4) 0 1 2 3
@@ -92,12 +100,17 @@ if [[ $(hostname -s) = *"master"* ]]; then
 	mv $(find ./ -name heketi-cli) /usr/bin/
 	
 	# Kubeadm Init
-	kubeadm init --pod-network-cidr=10.244.0.0/16 | tee >(sed -n '/kubeadm join --token/p' > init-node-command.txt)
+	kubeadm init --pod-network-cidr=10.244.0.0/16 | tee >(sed -n '/kubeadm join --token/p' >> $NEXT_STEPS_FILE)
 	mkdir -p /root/.kube
 	sudo cp -f /etc/kubernetes/admin.conf /root/.kube/config
 	sudo chown $(id -u):$(id -g) /root/.kube/config
 	kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 	kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel-rbac.yml
+	echo \
+"Setup the topology file:
+    cp gluster-kubernetes-block-and-s3/deploy/topology.json.sample gluster-kubernetes-block-and-s3/deploy/topology.json" >> $NEXT_STEPS_FILE
+	echo \
+"./gk-deploy topology.json -gvy --object-account=jcope --object-user=jcope --object-password=jcope" >> $NEXT_STEPS_FILE
 fi
 
 touch $SUCCESS_FILE

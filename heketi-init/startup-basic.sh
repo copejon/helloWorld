@@ -101,3 +101,4 @@ if [[ $(hostname -s) = *"master"* ]]; then
 fi
 
 touch $SUCCESS_FILE
+echo "Start up completion!"

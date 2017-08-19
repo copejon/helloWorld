@@ -4,10 +4,10 @@
 ### TODOs
 # parse gluster-s3-ep socket.
 
-
-LOG_FILE=/root/start-script.log
-SUCCESS_FILE=/root/__STARTUP_SUCCESS
-NEXT_STEPS_FILE=/root/next_steps
+ROOT=/root
+LOG_FILE=${ROOT}/start-script.log
+SUCCESS_FILE=${ROOT}/__STARTUP_SUCCESS
+NEXT_STEPS_FILE=${ROOT}/next_steps
 
 set -e
 set -o pipefail
@@ -17,8 +17,8 @@ if [ $(id -u) != 0  ]; then
 	sudo su
 fi
 
-echo "--cd-ing to root home"
-cd /root/
+echo "--cd-ing to $ROOT home"
+cd $ROOT
 
 touch $NEXT_STEPS_FILE
 
@@ -44,6 +44,7 @@ systemctl enable docker
 systemctl start docker
 
 # Gluster-Fuse
+echo "-- Installing gluster-fuse"
 yum install glusterfs-fuse -y -q -e 0
 
 # Kubectl
@@ -76,18 +77,24 @@ fi
 # Initialize the master node 
 if [[ $(hostname -s) = *"master"* ]]; then
 	echo "Looks like this is the master node. Initializing kubeadm"
+
 	# QoL Setup
 	yum install bash-completion tmux unzip -y
 	curl -sSLO https://raw.githubusercontent.com/copejon/sandbox/master/.tmux.conf
 	mkdir -p /root/.kube
 	kubectl completion bash > /root/.kube/completion
-	echo "source /root/.kube/completion" >> /root/.bashrc
+	cat <<EOF >>/root/.bashrc
+alias kc=kubectl
+source /root/.kube/completion
+EOF
 
 	# Gluster-Kubernetes
+	echo "-- Installing gluster-kubernetes"
 	curl -sSL https://github.com/gluster/gluster-kubernetes/archive/master.tar.gz | tar -xz
 	curl -sSL https://github.com/jarrpa/gluster-kubernetes/archive/block-and-s3.tar.gz | tar -xz
 
 	# s3Curl
+	echo "-- Installing s3curl"
 	curl -sSLO http://s3.amazonaws.com/doc/s3-example-code/s3-curl.zip
 	unzip s3-curl.zip
 	mv s3-curl.zip /tmp/
@@ -95,22 +102,27 @@ if [[ $(hostname -s) = *"master"* ]]; then
 	yum install perl-Digest-HMAC -y -q -e 0
 
 	# Kubeadm
-	echo "-- Initializing"
+	echo "-- Installing heketi-client"
 	curl -sSL https://github.com/heketi/heketi/releases/download/v4.0.0/heketi-client-v4.0.0.linux.amd64.tar.gz | tar -xz
 	mv $(find ./ -name heketi-cli) /usr/bin/
 	
 	# Kubeadm Init
+	echo "-- Initializing via kubeadm..."
 	kubeadm init --pod-network-cidr=10.244.0.0/16 | tee >(sed -n '/kubeadm join --token/p' >> $NEXT_STEPS_FILE)
 	mkdir -p /root/.kube
 	sudo cp -f /etc/kubernetes/admin.conf /root/.kube/config
 	sudo chown $(id -u):$(id -g) /root/.kube/config
 	kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 	kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel-rbac.yml
+
+	# write next (manual) steps to next_steps_file
 	echo \
 "Setup the topology file:
-    cp gluster-kubernetes-block-and-s3/deploy/topology.json.sample gluster-kubernetes-block-and-s3/deploy/topology.json" >> $NEXT_STEPS_FILE
+    cp ${ROOT}/gluster-kubernetes-block-and-s3/deploy/topology.json.sample ${ROOT}/gluster-kubernetes-block-and-s3/deploy/topology.json" >> $NEXT_STEPS_FILE
 	echo \
-"./gk-deploy topology.json -gvy --object-account=jcope --object-user=jcope --object-password=jcope" >> $NEXT_STEPS_FILE
+"Run gk-deploy:
+    cd ${ROOT}/gluster-kubernetes-block-and-s3/deploy
+    ./gk-deploy topology.json -gvy --object-account=jcope --object-user=jcope --object-password=jcope" >> $NEXT_STEPS_FILE
 fi
 
 touch $SUCCESS_FILE

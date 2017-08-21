@@ -56,7 +56,11 @@ else
 fi
 
 parse_git_branch () {
-	echo "$(__git_ps1) $([[ $(git status --porcelain)  ]] && echo '*')"
+	if [[ $(type -t __git_ps1) ]] && $(git rev-parse --is-inside-work-tree &>/dev/null); then
+		echo "$(__git_ps1) $([[ -n "$(git status --porcelain)"  ]] && echo '*')"
+	else
+		echo ""
+	fi
 }
 
 PS1="\[${BLUE}\]\u\[$BASE0\]@\[$CYAN\]\h \[$BASE0\]| \[$CYAN\]\w\[$BASE0\]\[$YELLOW\]\$(parse_git_branch)\n\$\[$RESET\] "

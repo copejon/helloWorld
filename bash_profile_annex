@@ -1,3 +1,4 @@
+#! /bin/bash
 # Source this file into ~/.bash_profile
 # Anything I want to remain consistent between machines goes here.
 
@@ -15,3 +16,7 @@ source $DIR/k8s-scripts/cluster-do
 
 # custom bash prompt including PS1
 source $DIR/bash_prompt
+
+function sprunge(){
+	curl -F 'sprunge=<-' http://sprunge.us
+}

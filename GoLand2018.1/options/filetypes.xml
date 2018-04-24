@@ -1,0 +1,10 @@
+<application>
+  <component name="FileTypeManager" version="17">
+    <extensionMap>
+      <mapping pattern="version" type="PLAIN_TEXT" />
+      <mapping pattern="asdf" type="PLAIN_TEXT" />
+      <mapping ext="cfg" type="PLAIN_TEXT" />
+      <mapping ext="config" type="PLAIN_TEXT" />
+    </extensionMap>
+  </component>
+</application>

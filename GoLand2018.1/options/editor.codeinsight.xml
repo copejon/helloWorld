@@ -1,0 +1,8 @@
+<application>
+  <component name="CodeInsightSettings">
+    <option name="HIGHLIGHT_SCOPE" value="true" />
+  </component>
+  <component name="Go">
+    <option name="renameSearchInCommentsForVariable" value="false" />
+  </component>
+</application>

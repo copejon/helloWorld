@@ -1,0 +1,171 @@
+<application>
+  <component name="RecentDirectoryProjectsManager">
+    <option name="recentPaths">
+      <list>
+        <option value="$USER_HOME$/Workspace/go/src/github.com/jbeda/tgik-controller" />
+        <option value="$USER_HOME$/Workspace/go/src/github.com/kubevirt/containerized-data-importer" />
+        <option value="$USER_HOME$/Workspace/go/src/github.com/kubernetes-incubator/service-catalog" />
+        <option value="$USER_HOME$/Workspace/go/src/github.com/yard-turkey/cns-object-broker" />
+        <option value="$USER_HOME$/Workspace/go/src/drivers" />
+        <option value="$USER_HOME$/Workspace/go/src/qemuMessingAround" />
+        <option value="$USER_HOME$/Workspace/go/src/github.com/kubevirt.io" />
+      </list>
+    </option>
+    <option name="openPaths">
+      <list>
+        <option value="$USER_HOME$/Workspace/go/src/github.com/kubevirt/containerized-data-importer" />
+        <option value="$USER_HOME$/Workspace/go/src/github.com/jbeda/tgik-controller" />
+      </list>
+    </option>
+    <option name="lastPath" value="$USER_HOME$/Workspace/go/src/github.com/jbeda/tgik-controller" />
+    <option name="pid" value="" />
+    <option name="additionalInfo">
+      <map>
+        <entry key="$USER_HOME$/Workspace/go/src/drivers">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-173.4674.34" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1522158790738" />
+              <option name="buildTimestamp" value="1520284428848" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/github.com/jbeda/tgik-controller">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-181.4445.70" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1524597086887" />
+              <option name="buildTimestamp" value="1523267475487" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/github.com/kubernetes-incubator/service-catalog">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-181.4445.70" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1524432774888" />
+              <option name="buildTimestamp" value="1523267479242" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/github.com/kubernetes/kubernetes">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-173.4548.17" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1519163374990" />
+              <option name="buildTimestamp" value="1516849417226" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/github.com/kubevirt.io">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-173.4548.17" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1520281276104" />
+              <option name="buildTimestamp" value="1516849410770" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/github.com/kubevirt/containerized-data-importer">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-181.4445.70" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1524597086887" />
+              <option name="buildTimestamp" value="1523267475487" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/github.com/kubevirt/kubevirt">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-173.4548.17" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1520281196505" />
+              <option name="buildTimestamp" value="1516849410770" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/github.com/yard-turkey/cns-object-broker">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-181.4445.70" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1524432774501" />
+              <option name="buildTimestamp" value="1523267479242" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/github.com/yard-turkey/cnv-copy-controller">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-173.4381.1" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1516314936394" />
+              <option name="buildTimestamp" value="1514986314757" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/github.com/yard-turkey/containerized-data-importer">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-173.4381.1" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1517420854705" />
+              <option name="buildTimestamp" value="1514986263734" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/github.com/yard-turkey/vm-image-import">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-173.4381.1" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1516915280232" />
+              <option name="buildTimestamp" value="1514986311352" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/k8s.io/sample-controller">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-173.4548.17" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1518794730389" />
+              <option name="buildTimestamp" value="1516849397550" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/Workspace/go/src/qemuMessingAround">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="GO-173.4548.17" />
+              <option name="productionCode" value="GO" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1520359383720" />
+              <option name="buildTimestamp" value="1516849410770" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="lastProjectLocation" value="$USER_HOME$/Workspace/go/src" />
+  </component>
+</application>

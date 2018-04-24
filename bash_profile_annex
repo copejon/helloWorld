@@ -6,8 +6,8 @@
 # is also bound to ctl-s, which is stupid.  Since I live my life through SSH, this isn't great.
 stty -ixon  
 
-alias ls='ls -Fh --group-directories-first --color=auto'
-alias ll='ls -l'
+#alias ls='ls -F --group-directories-first --color=auto'
+#alias ll='ls -l'
 alias k='kubectl'
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

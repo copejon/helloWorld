@@ -63,4 +63,10 @@ parse_git_branch () {
 	fi
 }
 
-PS1="\[${BLUE}\]\u\[$BASE0\]@\[$CYAN\]\h \[$BASE0\]| \[$CYAN\]\w\[$BASE0\]\[$YELLOW\]\$(parse_git_branch)\n\$\[$RESET\] "
+detect_pipenv () {
+	if [ -n "$VIRTUAL_ENV" ]; then
+		echo "($(basename $VIRTUAL_ENV)) " 
+	fi
+}
+PROMPT_DIRTRIM=2
+PS1="\[${BLUE}\]$(detect_pipenv)\u\[$BASE0\]@\[$CYAN\]\h \[$BASE0\]| \[$CYAN\]\w\[$BASE0\]\[$YELLOW\]\$(parse_git_branch)\n\$\[$RESET\] "

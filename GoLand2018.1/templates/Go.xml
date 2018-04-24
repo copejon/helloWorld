@@ -1,0 +1,20 @@
+<templateSet group="Go">
+  <template name="fmt.Debug" value="fmt.Println(&quot;[=== DEBUG ===] $FILE$:$LINE$: $VAR_NAME$ %v&quot;, $VAR$)&#10;$END$" description="Insert a debug statement" toReformat="true" toShortenFQNames="true">
+    <variable name="FILE" expression="errorVariable()" defaultValue="" alwaysStopAt="true" />
+    <variable name="LINE" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="VAR_NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="VAR" expression="fileName()" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="GO" value="true" />
+    </context>
+  </template>
+  <template name="fmt.DebugVar" value="fmt.Printf(&quot;[$FILE$:L$LINE$] %s&lt;%T&gt;: %+v&quot;, &quot;$VAR_NAME$&quot;, $VAR$, $VAR$)" shortcut="TAB" toReformat="false" toShortenFQNames="true">
+    <variable name="FILE" expression="fileName()" defaultValue="" alwaysStopAt="false" />
+    <variable name="LINE" expression="lineNumber()" defaultValue="" alwaysStopAt="false" />
+    <variable name="VAR" expression="completeSmart()" defaultValue="" alwaysStopAt="true" />
+    <variable name="VAR_NAME" expression="VAR" defaultValue="" alwaysStopAt="false" />
+    <context>
+      <option name="GO" value="true" />
+    </context>
+  </template>
+</templateSet>
